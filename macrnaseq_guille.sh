@@ -224,15 +224,13 @@ prepare_samplesheet () {
         echo "Raw data source: $(tput setaf 3)$input_raw_data_dir$(tput sgr0)"
 
         # Create array with sample names
-        # As I'm looking for 2 options in ls, the one missing will raise an error
-        # Redirect this error to /dev/null with 2>
         sample_names=( $(find $input_raw_data_dir/*q.gz -type f -exec basename {} ';' | cut -d "_" -f 1 | uniq) )
 
         # List fastq files containing R1 and R2
         read1=( $(ls $input_raw_data_dir/*R1*q.gz) )
         read2=( $(ls  $input_raw_data_dir/*R2*q.gz) )
 
-	nfiles_read1=${#read1[@]}
+	nfiles_read1=${#read1[@]} # ${#array[@]} gets the array length
 	nfiles_read2=${#read2[@]}
 	
 	echo "$nfiles_read1 files found for R1"
@@ -243,7 +241,7 @@ prepare_samplesheet () {
 		exit 1
 	fi
 
-        n_samples=${#sample_names[@]} # ${#array[@]} gets the array length
+        n_samples=${#sample_names[@]}
         echo "Uniquely named samples found on raw data source >> $(tput setaf 2)$n_samples$(tput sgr0) <<"
 
         # Build sample sheet
